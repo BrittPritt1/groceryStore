@@ -69,6 +69,11 @@ namespace GroceryStore
                             Console.WriteLine($"{id}, {name}, {category}, {price}, {stock}");
                         }
                     }
+
+                    //update quantity to 200 where < 100
+                    string updateCmdText = "UPDATE store SET stock_quantity=200 WHERE stock_quantity < 100;";
+                    var updateCmd = new MySqlCommand(updateCmdText, connection);
+                    updateCmd.ExecuteNonQuery();
                 }
                 catch (Exception ex)
                 {
