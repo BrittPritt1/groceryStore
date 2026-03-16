@@ -24,7 +24,7 @@ namespace GroceryStore
                     //createCmd.ExecuteNonQuery();
 
 
-                    string createStoreCmdText = "CREATE TABLE store (id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(100), category VARCHAR(100), price FLOAT, stock_quantity INT)";
+                    /* string createStoreCmdText = "CREATE TABLE store (id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(100), category VARCHAR(100), price FLOAT, stock_quantity INT)";
                     var createStoreCmd = new MySqlCommand(createStoreCmdText, connection);
                     createStoreCmd.ExecuteNonQuery();
 
@@ -49,6 +49,25 @@ namespace GroceryStore
                         float price = (float)groceryItemsData[i,2];
                         int stock = (int)groceryItemsData[i,3];
                         new MySqlCommand($"INSERT INTO store (name, category, price, stock_quantity) VALUES ('{name}','{category}',{price},{stock});",connection).ExecuteNonQuery(); 
+                    } */
+
+                    //SELECT WHERE quantity < 100
+                    string selectCmdText = "SELECT * FROM store WHERE stock_quantity < 100;";
+                    var selectCmd = new MySqlCommand(selectCmdText, connection);
+
+                    using(MySqlDataReader reader = selectCmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int id = reader.GetInt32("id");
+                            string name = reader.GetString("name");
+                            string category = reader.GetString("category");
+                            float price = reader.GetFloat("price");
+                            int stock = reader.GetInt32("stock_quantity");
+
+                            //display: id, name, category, price, quantity
+                            Console.WriteLine($"{id}, {name}, {category}, {price}, {stock}");
+                        }
                     }
                 }
                 catch (Exception ex)
