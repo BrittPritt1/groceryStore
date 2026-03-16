@@ -74,6 +74,11 @@ namespace GroceryStore
                     string updateCmdText = "UPDATE store SET stock_quantity=200 WHERE stock_quantity < 100;";
                     var updateCmd = new MySqlCommand(updateCmdText, connection);
                     updateCmd.ExecuteNonQuery();
+
+                    //Delete rows where category = vegetables
+                    string deleteCmdText = "DELETE FROM store WHERE category = 'Vegetables'";
+                    var deleteCmd = new MySqlCommand(deleteCmdText, connection);
+                    deleteCmd.ExecuteNonQuery();
                 }
                 catch (Exception ex)
                 {
