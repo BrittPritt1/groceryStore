@@ -1,4 +1,5 @@
-﻿using System.Reflection.Metadata;
+﻿using System.Data;
+using System.Reflection.Metadata;
 using MySql.Data.MySqlClient;
 
 namespace GroceryStore
@@ -79,6 +80,25 @@ namespace GroceryStore
                     string deleteCmdText = "DELETE FROM store WHERE category = 'Vegetables'";
                     var deleteCmd = new MySqlCommand(deleteCmdText, connection);
                     deleteCmd.ExecuteNonQuery();
+
+                    //DataAdapter
+                    string queryText = "SELECT * FROM store;";
+                    MySqlDataAdapter adapter = new MySqlDataAdapter(queryText, connection);
+                    DataSet store_dataset = new DataSet();
+                    adapter.Fill(store_dataset);
+
+                    Console.WriteLine(store_dataset.Tables.Count);
+                    DataTable table = store_dataset.Tables[0];
+
+                    foreach(DataRow row in table.Rows)
+                    {
+                        int id = (int) row["id"];
+                        string name = (string) row["name"];
+                        float price = (float) row["price"];
+
+                        Console.WriteLine($"{id} : {name} : {price}");
+                    }
+
                 }
                 catch (Exception ex)
                 {
