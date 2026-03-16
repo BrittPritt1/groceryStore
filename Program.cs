@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using System.Reflection.Metadata;
+using MySql.Data.MySqlClient;
 
 namespace GroceryStore
 {
@@ -12,14 +13,48 @@ namespace GroceryStore
             //MySqlConnection
             using(MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                connection.Open();
+                try
+                {
+                    connection.Open();
 
-                //new MySqlCommand("CREATE DATABASE groceryStore;", connection).ExecuteNonQuery();
+                    //new MySqlCommand("CREATE DATABASE groceryStore;", connection).ExecuteNonQuery();
 
-                string createCmdText = "CREATE TABLE products (id INT PRIMARY KEY, name VARCHAR(100), category VARCHAR(100), price FLOAT, stock_quantity INT)";
-                var createCmd = new MySqlCommand(createCmdText, connection);
+                    //string createCmdText = "CREATE TABLE products (id INT PRIMARY KEY, name VARCHAR(100), category VARCHAR(100), price FLOAT, stock_quantity INT)";
+                    //var createCmd = new MySqlCommand(createCmdText, connection);
+                    //createCmd.ExecuteNonQuery();
 
-                createCmd.ExecuteNonQuery();
+
+                    string createStoreCmdText = "CREATE TABLE store (id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(100), category VARCHAR(100), price FLOAT, stock_quantity INT)";
+                    var createStoreCmd = new MySqlCommand(createStoreCmdText, connection);
+                    createStoreCmd.ExecuteNonQuery();
+
+                    object[,] groceryItemsData = new object[,]
+                    {
+                        {"Bananas", "Fruits",0.99f,150},
+                        {"Apples", "Fruits",1.49f,100},
+                        {"Carrots", "Vegetables",0.79f,200},
+                        {"Potatoes", "Vegetables",1.29f,180},
+                        {"Milk", "Dairy",2.49f,80},
+                        {"Eggs", "Dairy",1.99f,120},
+                        {"Bread", "Bakery",1.99f,90}, 
+                        {"Chicken", "Meat",4.99f,50},
+                        {"Rice", "Grains",3.99f,120},
+                        {"Pasta", "Grains",1.49f,150},
+                    };
+
+                    for(int i = 0; i < groceryItemsData.GetLength(0); i++)
+                    {
+                        string name = (string)groceryItemsData[i,0];
+                        string category = (string)groceryItemsData[i,1];
+                        float price = (float)groceryItemsData[i,2];
+                        int stock = (int)groceryItemsData[i,3];
+                        new MySqlCommand($"INSERT INTO store (name, category, price, stock_quantity) VALUES ('{name}','{category}',{price},{stock});",connection).ExecuteNonQuery(); 
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
             }
         }
     }   
